@@ -17,12 +17,23 @@ namespace WPF_Reaction
 
         public bool новыйЦикл { get; set; }=true;
         public bool наБазе { get; set; }
-        public int фалшстарт { get; set; }  
+        public int фальстарт { get; set; }  // не надо 
         public int вовремя { get; set; }  
         public int опаздание { get; set; }  
-        public int промах { get; set; }  
-        public int вНе { get; set; }  
         public int попаданий { get; set; }
+
+        /// <summary>
+        /// клик в поле рядом
+        /// </summary>
+        public int промах { get; set; }
+
+        /// <summary>
+        /// клик на не ту кнопку
+        /// </summary>
+        public int ошибок { get; set; }
+
+
+        
 
         public double среднее { get; set; }
         public double минимальное { get; set; }
