@@ -1,0 +1,42 @@
+﻿<Window x:Name="ГлавноеОкно" x:Class="WPF_Reaction.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_Reaction"
+        mc:Ignorable="d"
+        Title="Реакция v_01" Height="450" Width="800" MinHeight="450" MinWidth="800" SizeChanged="ГлавноеОкно_SizeChanged_1">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF1D1D1D" Offset="1"/>
+            <GradientStop Color="#FF888888" Offset="0"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Grid x:Name="Grid_Главный">
+        <Grid x:Name="Grid_направления2"  Margin="400,34,0,0" Background="#FF333333">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="309*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="311*"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="grid_Направления2" Background="Black" Grid.Column="1" Grid.Row="1">
+                <Button x:Name="кнопка_Верх" Content="верх" HorizontalAlignment="Center" VerticalAlignment="Top" Width="40" Height="40" Click="кнопка_Верх_Click"/>
+                <Button x:Name="кнопка_Право" Content="право" HorizontalAlignment="Right" VerticalAlignment="Center" Width="40" Height="40" Click="кнопка_Право_Click"/>
+                <Button x:Name="кнопка_Низ" Content="низ" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Height="40" Click="кнопка_Низ_Click"/>
+                <Button x:Name="кнопка_Лево" HorizontalAlignment="Left" VerticalAlignment="Center" Width="40" Height="40" Content="лево" Click="кнопка_Лево_Click"/>
+                <Button x:Name="кнопка_База" Content="база" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" Height="40" MouseLeave="кнопка_База_MouseLeave" MouseEnter="кнопка_База_MouseEnter"/>
+            </Grid>
+        </Grid>
+        <TextBox x:Name="textbox_история" HorizontalAlignment="Left" Margin="0,216,0,0" TextWrapping="Wrap" Text="история" VerticalAlignment="Top" Width="337" Foreground="White" Background="Black" Height="218" AllowDrop="False" VerticalScrollBarVisibility="Visible"/>
+        <Button x:Name="кнопка_Старт" Content="старт" HorizontalAlignment="Left" Margin="1,1,0,0" VerticalAlignment="Top" Click="кнопка_Старт_Click" Height="20" Width="60"/>
+        <Button x:Name="кнопка_Стоп" Content="стоп" HorizontalAlignment="Left" Margin="71,1,0,0" VerticalAlignment="Top" Click="кнопка_Стоп_Click" Width="60" Height="20"/>
+        <Label x:Name="label_инфо" Content="Label" HorizontalAlignment="Left" Margin="0,23,0,0" VerticalAlignment="Top" Foreground="White" FontSize="10"/>
+        <Button x:Name="кнопка_Чистить" Content="чистить" HorizontalAlignment="Left" Margin="146,1,0,0" VerticalAlignment="Top" Click="кнопка_Чистить_Click" Width="60" Height="20"/>
+
+    </Grid>
+</Window>
