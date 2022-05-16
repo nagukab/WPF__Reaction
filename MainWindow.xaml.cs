@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -21,26 +23,20 @@ namespace WPF_Reaction
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<TimeSpan> ЛистИнтервалов = new List<TimeSpan>();
-        // List<double> ЛистДаблов = new List<double>();
         double растояниеДокнопки, лимитВремени = 2000, задержкаПодсветки = 1000;
-
-        bool таймерНаСтарт = false, кнопкаПодсвечена = false, ограничениеВремени = false, ускорениеПодсветки = false;
-
-
+        bool таймерНаСтарт = false, кнопкаПодсвечена = false, ограничениеВремени = false, ускорениеПодсветки = false, звукОшибки;
         DateTime текущееВРемя;
         TimeSpan интервал;
         вДанные данные = new вДанные();
         Timer таймерПлохойРеакции = new Timer();
         Timer таймерПодсветки = new Timer();
         Random рандом = new Random();
-        int[] числа = new int[4];
         Brush стандартныйЦвет;
-
 
         public MainWindow()
         {
             InitializeComponent();
+            звукОшибки = Convert.ToBoolean(checkbox_ЗвукОшибки.IsChecked);
             стандартныйЦвет = кнопка_База.Background;
             таймерПодсветки.Interval = задержкаПодсветки;
             таймерПодсветки.Elapsed += ТаймерВызова_Elapsed;
@@ -79,7 +75,8 @@ namespace WPF_Reaction
         private void ТаймерПлохойРеакции_Elapsed(object sender, ElapsedEventArgs e)
         {
             данные.опаздание++;
-            История($" НЕ УСПЕЛ, прошло {таймерПлохойРеакции.Interval}  - функция в разработке"); таймерПлохойРеакции.Stop(); ЗаполнитьЛейбл();
+            История($"{DateTime.Now:HH:mm:ss_fff} ОПАЗДАНИЕ - прошло {таймерПлохойРеакции.Interval} мс"); таймерПлохойРеакции.Stop(); ЗаполнитьЛейбл();
+            ЗвукНеудачи();
         }
 
         #endregion события
@@ -101,7 +98,6 @@ namespace WPF_Reaction
                 даКнопка.Background = стандартныйЦвет;
                 интервал = DateTime.Now.Subtract(текущееВРемя);
                 double дабл = интервал.TotalMilliseconds;
-                ЛистИнтервалов.Append(интервал);
                 данные.ЛистДаблов.Add(дабл);
                 if (данные.ЛистДаблов.Count > 0)
                 {
@@ -116,7 +112,7 @@ namespace WPF_Reaction
 
 
             }
-            else if (кнопкаПодсвечена && даКнопка.Background != Brushes.Red) { История($"мимо - функция в разработке"); данные.ошибок++; }            
+            else if (кнопкаПодсвечена && даКнопка.Background != Brushes.Red) { История($"{DateTime.Now:HH:mm:ss_fff} ОШИБКА - клик не на ту кнопку"); данные.ошибок++; ЗвукНеудачи(); }
             ЗаполнитьЛейбл();
 
         }
@@ -151,6 +147,7 @@ namespace WPF_Reaction
             });
         }
 
+        void ЗвукНеудачи() { if (звукОшибки) { using (MemoryStream звук = new MemoryStream(Properties.Resources.Errorwav)) new SoundPlayer(звук).Play(); } }
 
         #endregion методы
 
@@ -159,10 +156,7 @@ namespace WPF_Reaction
 
         private void кнопка_Старт_Click(object sender, RoutedEventArgs e) { таймерНаСтарт = true; кнопка_База.Background = Brushes.Green; textbox_история.Clear(); }
         private void кнопка_Стоп_Click(object sender, RoutedEventArgs e) { таймерНаСтарт = false; таймерПодсветки.Stop(); }
-        private void кнопка_Лево_Click(object sender, RoutedEventArgs e) { НажатиеНаКнопку(sender); }
-        private void кнопка_Верх_Click(object sender, RoutedEventArgs e) { НажатиеНаКнопку(sender); }
-        private void кнопка_Право_Click(object sender, RoutedEventArgs e) { НажатиеНаКнопку(sender); }
-        private void кнопка_Низ_Click(object sender, RoutedEventArgs e) { НажатиеНаКнопку(sender); }
+        private void кнопка_ОднаИз4ех_Click(object sender, RoutedEventArgs e)        { НажатиеНаКнопку(sender); }       
         private void кнопка_Чистить_Click(object sender, RoutedEventArgs e) { textbox_история.Clear(); slider_реакция.Value = 0; данные = new вДанные(); ЗаполнитьЛейбл(); таймерПлохойРеакции.Interval = лимитВремени; }
         private void кнопка_База_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -178,7 +172,7 @@ namespace WPF_Reaction
         {
             кнопка_База.Background = стандартныйЦвет;
             данные.наБазе = true;
-            if (таймерНаСтарт&&!кнопкаПодсвечена)
+            if (таймерНаСтарт && !кнопкаПодсвечена)
             {
                 if (ускорениеПодсветки) // если стоит режим ускорения подсветки
                 {
@@ -199,27 +193,21 @@ namespace WPF_Reaction
                     }
                     таймерПодсветки.Interval = задержкаПодсветки; //глюк похоже, иногда при изменении интервала таймер сам запускается что ли, по этому из друго места пришлось сиюда перенести в место прям перед запуском таймера
                 }
-                таймерПодсветки.Start(); 
+                таймерПодсветки.Start();
             }
             ЗаполнитьЛейбл();
         }
-        private void ГлавноеОкно_SizeChanged_1(object sender, SizeChangedEventArgs e)
-        {
-            растояниеДокнопки = (grid_Направления2.ActualWidth + grid_Направления2.ActualHeight) / 4 - 20; 
-        }
+
+
+        private void ГлавноеОкно_SizeChanged_1(object sender, SizeChangedEventArgs e) { растояниеДокнопки = (grid_Направления2.ActualWidth + grid_Направления2.ActualHeight) / 4 - 20; }
 
 
         private void ГлавноеОкно_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (кнопкаПодсвечена) { данные.промах++; ЗаполнитьЛейбл(); }            
-        }
+        { if (кнопкаПодсвечена) { данные.промах++; История($"{DateTime.Now:HH:mm:ss_fff} ПРОМАХ - клик мимо кнопки"); ЗаполнитьЛейбл(); ЗвукНеудачи(); } }
 
         private void checkbox_ОграничениеВремени_Click(object sender, RoutedEventArgs e) { if (checkbox_ОграничениеВремени.IsChecked == true) { ограничениеВремени = true; } else { ограничениеВремени = false; } }
-        private void checkbox_УскорениеПодсветки_Click(object sender, RoutedEventArgs e)
-        {
-            if (checkbox_УскорениеПодсветки.IsChecked == true) { ускорениеПодсветки = true; } else { ускорениеПодсветки = false; }
-        }
-
+        private void checkbox_УскорениеПодсветки_Click(object sender, RoutedEventArgs e) { if (checkbox_УскорениеПодсветки.IsChecked == true) { ускорениеПодсветки = true; } else { ускорениеПодсветки = false; } }
+        private void checkbox_ЗвукОшибки_Click(object sender, RoutedEventArgs e) { if (checkbox_ЗвукОшибки.IsChecked == true) { звукОшибки = true; } else { звукОшибки = false; } }
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) { slider_реакция.Value = данные.среднее; } //не дает изменять,но isenabled =false не подошло, так как не выводило подсказку при наведении
         #endregion кнопки 
 

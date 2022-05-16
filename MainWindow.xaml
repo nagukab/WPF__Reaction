@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_Reaction"
         mc:Ignorable="d"
-        Title="Реакция v_03" Height="450" Width="800" MinHeight="450" MinWidth="800" SizeChanged="ГлавноеОкно_SizeChanged_1" MouseDown="ГлавноеОкно_MouseDown">
+        Title="Реакция v_04" Height="450" Width="800" MinHeight="450" MinWidth="800" SizeChanged="ГлавноеОкно_SizeChanged_1" MouseDown="ГлавноеОкно_MouseDown">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF1D1D1D" Offset="1"/>
@@ -25,10 +25,10 @@
                 <ColumnDefinition Width="50"/>
             </Grid.ColumnDefinitions>
             <Grid x:Name="grid_Направления2" Background="Black" Grid.Column="1" Grid.Row="1" Panel.ZIndex="-2">
-                <Button x:Name="кнопка_Верх" Content="верх" HorizontalAlignment="Center" VerticalAlignment="Top" Width="40" Height="40" Click="кнопка_Верх_Click"/>
-                <Button x:Name="кнопка_Право" Content="право" HorizontalAlignment="Right" VerticalAlignment="Center" Width="40" Height="40" Click="кнопка_Право_Click"/>
-                <Button x:Name="кнопка_Низ" Content="низ" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Height="40" Click="кнопка_Низ_Click"/>
-                <Button x:Name="кнопка_Лево" HorizontalAlignment="Left" VerticalAlignment="Center" Width="40" Height="40" Content="лево" Click="кнопка_Лево_Click"/>
+                <Button x:Name="кнопка_Верх" Content="верх" HorizontalAlignment="Center" VerticalAlignment="Top" Width="40" Height="40" Click="кнопка_ОднаИз4ех_Click"/>
+                <Button x:Name="кнопка_Право" Content="право" HorizontalAlignment="Right" VerticalAlignment="Center" Width="40" Height="40" Click="кнопка_ОднаИз4ех_Click"/>
+                <Button x:Name="кнопка_Низ" Content="низ" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Height="40" Click="кнопка_ОднаИз4ех_Click"/>
+                <Button x:Name="кнопка_Лево" HorizontalAlignment="Left" VerticalAlignment="Center" Width="40" Height="40" Content="лево" Click="кнопка_ОднаИз4ех_Click"/>
                 <Button x:Name="кнопка_База" Content="база" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" Height="40" MouseLeave="кнопка_База_MouseLeave" MouseEnter="кнопка_База_MouseEnter"/>
             </Grid>
         </Grid>
@@ -55,6 +55,7 @@
         </Slider>
         <CheckBox x:Name="checkbox_ОграничениеВремени" Content="Ограничение Времени" HorizontalAlignment="Left" Margin="249,164,0,0" VerticalAlignment="Top" Background="White" Foreground="#FF040404" ToolTip="автоматическое сокращения времени, дающегося на нажатие кнопки" Click="checkbox_ОграничениеВремени_Click"/>
         <CheckBox x:Name="checkbox_УскорениеПодсветки" Content="УскорениеПодсветки" HorizontalAlignment="Left" Margin="102,164,0,0" VerticalAlignment="Top" Background="White" Foreground="#FF040404" ToolTip="автоматическое сокращения времени перед новой подсветкой кнопки" Click="checkbox_УскорениеПодсветки_Click"/>
+        <CheckBox x:Name="checkbox_ЗвукОшибки" Content="Звук Ошибки" HorizontalAlignment="Left" Margin="249,143,0,0" VerticalAlignment="Top" Background="White" Foreground="#FF040404" ToolTip="воспроизводит звуковое оповещение при ошибке, промахе и опаздании" Click="checkbox_ЗвукОшибки_Click" IsChecked="True"/>
 
     </Grid>
 </Window>
