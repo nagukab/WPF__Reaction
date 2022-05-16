@@ -23,12 +23,12 @@ namespace WPF_Reaction
     {
         List<TimeSpan> ЛистИнтервалов = new List<TimeSpan>();
         // List<double> ЛистДаблов = new List<double>();
-        double растояниеДокнопки, лимитВремени = 2000,задержкаПодсветки=1000;
+        double растояниеДокнопки, лимитВремени = 2000, задержкаПодсветки = 1000;
 
-        bool кнопкаПодсвечена = false,  ограничениеВремени = false, ускорениеПодсветки=false;
+        bool таймерНаСтарт = false, кнопкаПодсвечена = false, ограничениеВремени = false, ускорениеПодсветки = false;
 
 
-        DateTime текущееВРемя = DateTime.Now;
+        DateTime текущееВРемя;
         TimeSpan интервал;
         вДанные данные = new вДанные();
         Timer таймерПлохойРеакции = new Timer();
@@ -68,7 +68,7 @@ namespace WPF_Reaction
 
             if (ограничениеВремени) // если включен режим ограничения времени
             {
-                double урезатьНа = (лимитВремени - данные.среднее)*0.2; // урезать лимит на 20% от интервала между лимитом и средней задержкой
+                double урезатьНа = (лимитВремени - данные.среднее) * 0.2; // урезать лимит на 20% от интервала между лимитом и средней задержкой
                 лимитВремени -= урезатьНа;
                 таймерПлохойРеакции.Interval = лимитВремени; //глюк похоже, иногда при изменении интервала таймер сам запускается что ли
                 таймерПлохойРеакции.Start();
@@ -94,11 +94,11 @@ namespace WPF_Reaction
             {
                 if (таймерПлохойРеакции.Enabled) // если таймер плохой реакции ещё идет, значит нажато вовремя
                 {
-                таймерПлохойРеакции.Stop(); данные.вовремя++;
+                    таймерПлохойРеакции.Stop(); данные.вовремя++;
 
                 }
                 кнопкаПодсвечена = false;
-                даКнопка.Background = стандартныйЦвет; данные.новыйЦикл = true;
+                даКнопка.Background = стандартныйЦвет;
                 интервал = DateTime.Now.Subtract(текущееВРемя);
                 double дабл = интервал.TotalMilliseconds;
                 ЛистИнтервалов.Append(интервал);
@@ -109,15 +109,14 @@ namespace WPF_Reaction
                     данные.максимальное = данные.ЛистДаблов.Max();
                     данные.минимальное = данные.ЛистДаблов.Min();
                     данные.попаданий = данные.ЛистДаблов.Count();
-                    Dispatcher.Invoke(() => { slider_реакция.Value = данные.ЛистДаблов.Average(); slider_реакция.ToolTip = $"{данные.ЛистДаблов.Average()} мс"; });
+                    Dispatcher.Invoke(() => { slider_реакция.Value = данные.ЛистДаблов.Average(); slider_реакция.ToolTip = $"среднее время реакции {данные.ЛистДаблов.Average()} мс"; });
                 }
 
-                История($"попал {интервал}   реакция={дабл}   среднее={данные.среднее}   миниум={данные.минимальное}   максимум={данные.максимальное}");
+                История($"{DateTime.Now:HH:mm:ss_fff} реакция последняя={дабл}   средняя={данные.среднее}   миниум={данные.минимальное}   максимум={данные.максимальное}");
 
-               
+
             }
-            else if (кнопкаПодсвечена && даКнопка.Background != Brushes.Red) { История($"мимо - функция в разработке"); данные.ошибок++; }
-            else if (таймерПодсветки.Enabled) { История($"фальстарт - функция в разработке"); данные.фальстарт++; } // только если таймер запущен ( ведь кнопка может быть не подсвечена и тогда когда таймер НЕ запущен, тогда эт не фальстарт)
+            else if (кнопкаПодсвечена && даКнопка.Background != Brushes.Red) { История($"мимо - функция в разработке"); данные.ошибок++; }            
             ЗаполнитьЛейбл();
 
         }
@@ -126,14 +125,13 @@ namespace WPF_Reaction
         {
             Dispatcher.Invoke(() =>
             {
-                label_инфо.Content = $"наБазе={данные.наБазе}   новыйЦикл={данные.новыйЦикл}\n" +
-                        $"max={данные.максимальное} мс\n" +
+                label_инфо.Content = $"max={данные.максимальное} мс\n" +
                         $"среднее={данные.среднее} мс\n" +
                         $"min={данные.минимальное} мс\n" +
                         $"попаданий={данные.попаданий}   вовремя={данные.вовремя}   опазданий={данные.опаздание}\n" +
-                        $"ошибок={данные.ошибок}   промахов={данные.промах}  фальстарт={данные.фальстарт}\n" +
+                        $"ошибок={данные.ошибок}   промахов={данные.промах}\n" +
                         $"среднееРастояниеДоКнопки={растояниеДокнопки}\n" +
-                        $"таймерВызова.Enabled={таймерПодсветки.Enabled}\n" +
+                        $"таймерВызова.Enabled={таймерПодсветки.Enabled}   наБазе={данные.наБазе}\n" +
                         $"таймерПлохойРеакции.Enabled={таймерПлохойРеакции.Enabled}\n" +
                         $"лимитВремени={лимитВремени}   задержкаПодсветки={задержкаПодсветки}";
             });
@@ -159,41 +157,33 @@ namespace WPF_Reaction
 
         #region  ____________________________________КНОПКИ
 
-        private void кнопка_Лево_Click(object sender, RoutedEventArgs e)
-        {
-            НажатиеНаКнопку(sender);
-        }
-        private void кнопка_Верх_Click(object sender, RoutedEventArgs e)
-        {
-            НажатиеНаКнопку(sender);
-        }
-        private void кнопка_Право_Click(object sender, RoutedEventArgs e)
-        {
-            НажатиеНаКнопку(sender);
-        }
-        private void кнопка_Низ_Click(object sender, RoutedEventArgs e)
-        {
-            НажатиеНаКнопку(sender);
-        }
-        private void кнопка_Старт_Click(object sender, RoutedEventArgs e) { таймерПодсветки.Start(); текущееВРемя = DateTime.Now; }
-        private void кнопка_Стоп_Click(object sender, RoutedEventArgs e) { таймерПодсветки.Stop(); История($" размер {grid_Направления2.ActualWidth} {grid_Направления2.ActualHeight}"); }
+        private void кнопка_Старт_Click(object sender, RoutedEventArgs e) { таймерНаСтарт = true; кнопка_База.Background = Brushes.Green; textbox_история.Clear(); }
+        private void кнопка_Стоп_Click(object sender, RoutedEventArgs e) { таймерНаСтарт = false; таймерПодсветки.Stop(); }
+        private void кнопка_Лево_Click(object sender, RoutedEventArgs e) { НажатиеНаКнопку(sender); }
+        private void кнопка_Верх_Click(object sender, RoutedEventArgs e) { НажатиеНаКнопку(sender); }
+        private void кнопка_Право_Click(object sender, RoutedEventArgs e) { НажатиеНаКнопку(sender); }
+        private void кнопка_Низ_Click(object sender, RoutedEventArgs e) { НажатиеНаКнопку(sender); }
         private void кнопка_Чистить_Click(object sender, RoutedEventArgs e) { textbox_история.Clear(); slider_реакция.Value = 0; данные = new вДанные(); ЗаполнитьЛейбл(); таймерПлохойРеакции.Interval = лимитВремени; }
         private void кнопка_База_MouseLeave(object sender, MouseEventArgs e)
         {
             кнопка_База.Background = Brushes.Yellow;
             данные.наБазе = false;
+            if (!кнопкаПодсвечена)//если курсор убирается до того как кнопк подсветится, то останавливать таймер
+            {
+                таймерПодсветки.Stop();
+            }
             ЗаполнитьЛейбл();
         }
         private void кнопка_База_MouseEnter(object sender, MouseEventArgs e)
         {
             кнопка_База.Background = стандартныйЦвет;
             данные.наБазе = true;
-            if (данные.новыйЦикл)
+            if (таймерНаСтарт&&!кнопкаПодсвечена)
             {
                 if (ускорениеПодсветки) // если стоит режим ускорения подсветки
                 {
                     double урезатьНа;
-                    if (задержкаПодсветки> данные.среднее)
+                    if (задержкаПодсветки > данные.среднее)
                     {
                         урезатьНа = задержкаПодсветки * 0.05;
                     }
@@ -201,7 +191,7 @@ namespace WPF_Reaction
                     {
                         урезатьНа = задержкаПодсветки * 0.02;
                     }
-                     
+
                     задержкаПодсветки -= урезатьНа;
                     if (задержкаПодсветки < 10)
                     {
@@ -209,20 +199,19 @@ namespace WPF_Reaction
                     }
                     таймерПодсветки.Interval = задержкаПодсветки; //глюк похоже, иногда при изменении интервала таймер сам запускается что ли, по этому из друго места пришлось сиюда перенести в место прям перед запуском таймера
                 }
-                таймерПодсветки.Start(); данные.новыйЦикл = false;
+                таймерПодсветки.Start(); 
             }
             ЗаполнитьЛейбл();
         }
         private void ГлавноеОкно_SizeChanged_1(object sender, SizeChangedEventArgs e)
         {
-            растояниеДокнопки = (grid_Направления2.ActualWidth + grid_Направления2.ActualHeight) / 4 - 20; История($" размер {grid_Направления2.ActualWidth} {grid_Направления2.ActualHeight}");
+            растояниеДокнопки = (grid_Направления2.ActualWidth + grid_Направления2.ActualHeight) / 4 - 20; 
         }
 
 
         private void ГлавноеОкно_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (кнопкаПодсвечена) { данные.промах++; ЗаполнитьЛейбл(); }
-            else if (таймерПодсветки.Enabled) { данные.фальстарт++; ЗаполнитьЛейбл(); }
+            if (кнопкаПодсвечена) { данные.промах++; ЗаполнитьЛейбл(); }            
         }
 
         private void checkbox_ОграничениеВремени_Click(object sender, RoutedEventArgs e) { if (checkbox_ОграничениеВремени.IsChecked == true) { ограничениеВремени = true; } else { ограничениеВремени = false; } }
@@ -231,10 +220,7 @@ namespace WPF_Reaction
             if (checkbox_УскорениеПодсветки.IsChecked == true) { ускорениеПодсветки = true; } else { ускорениеПодсветки = false; }
         }
 
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            slider_реакция.Value = данные.среднее;
-        }
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) { slider_реакция.Value = данные.среднее; } //не дает изменять,но isenabled =false не подошло, так как не выводило подсказку при наведении
         #endregion кнопки 
 
 

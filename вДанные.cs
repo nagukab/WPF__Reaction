@@ -15,9 +15,8 @@ namespace WPF_Reaction
 
         public List<double> ЛистДаблов;//= new List<double>();
 
-        public bool новыйЦикл { get; set; }=true;
-        public bool наБазе { get; set; }
-        public int фальстарт { get; set; }  // не надо 
+       
+        public bool наБазе { get; set; }       
         public int вовремя { get; set; }  
         public int опаздание { get; set; }  
         public int попаданий { get; set; }

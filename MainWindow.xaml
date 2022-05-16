@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_Reaction"
         mc:Ignorable="d"
-        Title="Реакция v_02" Height="450" Width="800" MinHeight="450" MinWidth="800" SizeChanged="ГлавноеОкно_SizeChanged_1" MouseDown="ГлавноеОкно_MouseDown">
+        Title="Реакция v_03" Height="450" Width="800" MinHeight="450" MinWidth="800" SizeChanged="ГлавноеОкно_SizeChanged_1" MouseDown="ГлавноеОкно_MouseDown">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF1D1D1D" Offset="1"/>
@@ -32,12 +32,12 @@
                 <Button x:Name="кнопка_База" Content="база" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" Height="40" MouseLeave="кнопка_База_MouseLeave" MouseEnter="кнопка_База_MouseEnter"/>
             </Grid>
         </Grid>
-        <TextBox x:Name="textbox_история" HorizontalAlignment="Left" Margin="0,216,0,0" TextWrapping="Wrap" Text="история" VerticalAlignment="Top" Width="395" Foreground="White" Background="Black" Height="218" AllowDrop="False" VerticalScrollBarVisibility="Visible"/>
+        <TextBox x:Name="textbox_история" HorizontalAlignment="Left" Margin="0,216,0,0" TextWrapping="Wrap" Text="1 Нажать кнопку &quot;старт&quot;.&#xD;&#xA;2 Навести курсор на кнопку &quot;база&quot;.&#xD;&#xA;3 Дождаться подсветки одной из 4ех кнопок красным цветом.&#xD;&#xA;4 Нажать на красную кнопку.&#xD;&#xA;5 Для повторной проверки реакции вернуться к пункту 2." VerticalAlignment="Stretch" Width="395" Foreground="White" Background="Black" AllowDrop="False" VerticalScrollBarVisibility="Visible"/>
         <Button x:Name="кнопка_Старт" Content="старт" HorizontalAlignment="Left" Margin="335,0,0,0" VerticalAlignment="Top" Click="кнопка_Старт_Click" Height="20" Width="60"/>
         <Button x:Name="кнопка_Стоп" Content="стоп" HorizontalAlignment="Left" Margin="335,25,0,0" VerticalAlignment="Top" Click="кнопка_Стоп_Click" Width="60" Height="20"/>
-        <Label x:Name="label_инфо" Content="Label" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="White" FontSize="10" RenderTransformOrigin="0.469,-1.102"/>
+        <Label x:Name="label_инфо" Content="Данные:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="White" FontSize="10" RenderTransformOrigin="0.469,-1.102"/>
         <Button x:Name="кнопка_Чистить" Content="чистить" HorizontalAlignment="Left" Margin="335,50,0,0" VerticalAlignment="Top" Click="кнопка_Чистить_Click" Width="60" Height="20"/>
-        <Slider x:Name="slider_реакция" HorizontalAlignment="Left" Margin="1,185,0,0" VerticalAlignment="Top" Orientation="Horizontal" TickPlacement="TopLeft" ValueChanged="Slider_ValueChanged" SmallChange="1" Maximum="2000" LargeChange="10" TickFrequency="200" Height="26" Width="394" ToolTip="подсказка" IsTabStop="False" >
+        <Slider x:Name="slider_реакция" HorizontalAlignment="Left" Margin="1,185,0,0" VerticalAlignment="Top" Orientation="Horizontal" TickPlacement="TopLeft" ValueChanged="Slider_ValueChanged" SmallChange="1" Maximum="2000" LargeChange="10" TickFrequency="200" Height="26" Width="394" ToolTip="среднее время реакции" IsTabStop="False" >
             <Slider.Background>
                 <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1" SpreadMethod="Pad" Opacity="0.8" MappingMode="RelativeToBoundingBox">
                     <LinearGradientBrush.RelativeTransform>
@@ -53,8 +53,8 @@
                 </LinearGradientBrush>
             </Slider.Background>
         </Slider>
-        <CheckBox x:Name="checkbox_ОграничениеВремени" Content="Ограничение Времени" HorizontalAlignment="Left" Margin="249,154,0,0" VerticalAlignment="Top" Background="White" Foreground="#FF040404" ToolTip="автоматическое сокращения времени, дающегося на нажатие кнопки" Click="checkbox_ОграничениеВремени_Click"/>
-        <CheckBox x:Name="checkbox_УскорениеПодсветки" Content="УскорениеПодсветки" HorizontalAlignment="Left" Margin="85,162,0,0" VerticalAlignment="Top" Background="White" Foreground="#FF040404" ToolTip="автоматическое сокращения времени перед новой подсветкой кнопки" Click="checkbox_УскорениеПодсветки_Click"/>
+        <CheckBox x:Name="checkbox_ОграничениеВремени" Content="Ограничение Времени" HorizontalAlignment="Left" Margin="249,164,0,0" VerticalAlignment="Top" Background="White" Foreground="#FF040404" ToolTip="автоматическое сокращения времени, дающегося на нажатие кнопки" Click="checkbox_ОграничениеВремени_Click"/>
+        <CheckBox x:Name="checkbox_УскорениеПодсветки" Content="УскорениеПодсветки" HorizontalAlignment="Left" Margin="102,164,0,0" VerticalAlignment="Top" Background="White" Foreground="#FF040404" ToolTip="автоматическое сокращения времени перед новой подсветкой кнопки" Click="checkbox_УскорениеПодсветки_Click"/>
 
     </Grid>
 </Window>
